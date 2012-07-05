@@ -1,4 +1,3 @@
-
 package xpug.kata.birthday_greetings;
 
 import java.io.IOException;

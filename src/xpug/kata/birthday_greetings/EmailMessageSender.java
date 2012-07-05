@@ -39,25 +39,25 @@ public class EmailMessageSender implements MessageSender {
     }
 
     public void sendMessage(String sender, String subject, String body, String recipient) throws AddressException, MessagingException {
-           // Create a mail session
-           java.util.Properties props = new java.util.Properties();
-           props.put("mail.smtp.host", smtpHost);
-           props.put("mail.smtp.port", "" + smtpPort);
-           Session session = Session.getDefaultInstance(props, null);
+        // Create a mail session
+        java.util.Properties props = new java.util.Properties();
+        props.put("mail.smtp.host", smtpHost);
+        props.put("mail.smtp.port", "" + smtpPort);
+        Session session = Session.getDefaultInstance(props, null);
 
-           // Construct the message
-           Message msg = new MimeMessage(session);
-           msg.setFrom(new InternetAddress(sender));
-           msg.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-           msg.setSubject(subject);
-           msg.setText(body);
+        // Construct the message
+        Message msg = new MimeMessage(session);
+        msg.setFrom(new InternetAddress(sender));
+        msg.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+        msg.setSubject(subject);
+        msg.setText(body);
 
-           // Send the message
-           sendMessage(msg);
-       }
+        // Send the message
+        sendMessage(msg);
+    }
 
     protected void sendMessage(Message msg) throws MessagingException {
-           Transport.send(msg);
-       }
+        Transport.send(msg);
+    }
 
 }
