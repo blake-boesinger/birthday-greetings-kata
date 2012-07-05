@@ -1,7 +1,6 @@
 package xpug.kata.birthday_greetings;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -21,13 +20,10 @@ public class BirthdayService {
 
 
 
-    public void sendGreetings( OurDate ourDate, String smtpHost, int smtpPort) throws IOException, ParseException, AddressException, MessagingException {
-
+    public void sendGreetings( OurDate ourDate) throws IOException, ParseException, MessagingException {
         List<Email> toSend = new ArrayList<Email>();
 
-
         List<Employee> employeesWithBirthdayToday = employeeBook.findEmployeesBornOn(ourDate);
-
 
         for (Employee employee : employeesWithBirthdayToday) {
             String recipient = employee.getEmail();
@@ -47,7 +43,7 @@ public class BirthdayService {
     public static void main(String[] args) {
         BirthdayService service = new BirthdayService(new FileSystemEmployeeBook("employee_data.txt"), new EmailMessageSender("localhost", "25"));
         try {
-            service.sendGreetings( new OurDate("2008/10/08"), "localhost", 25);
+            service.sendGreetings( new OurDate("2008/10/08"));
         } catch (Exception e) {
             e.printStackTrace();
         }
