@@ -1,15 +1,14 @@
 package xpug.kata.birthday_greetings;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class AcceptanceTest {
@@ -22,7 +21,7 @@ public class AcceptanceTest {
 	public void setUp() throws Exception {
 		messagesSent = new ArrayList<Message>();
 
-		service = new BirthdayService() {			
+		service = new BirthdayService(new FileSystemEmployeeBook("employee_data.txt")) {
 			@Override
 			protected void sendMessage(Message msg) throws MessagingException {
 				messagesSent.add(msg);
@@ -33,7 +32,7 @@ public class AcceptanceTest {
 	@Test
 	public void baseScenario() throws Exception {
 		
-		service.sendGreetings("employee_data.txt", new OurDate("2008/10/08"), "localhost", SMTP_PORT);
+		service.sendGreetings(new OurDate("2008/10/08"), "localhost", SMTP_PORT);
 		
 		assertEquals("message not sent?", 1, messagesSent.size());
 		Message message = messagesSent.get(0);
@@ -45,7 +44,7 @@ public class AcceptanceTest {
 	
 	@Test
 	public void willNotSendEmailsWhenNobodysBirthday() throws Exception {		
-		service.sendGreetings("employee_data.txt", new OurDate("2008/01/01"), "localhost", SMTP_PORT);
+		service.sendGreetings( new OurDate("2008/01/01"), "localhost", SMTP_PORT);
 		
 		assertEquals("what? messages?", 0, messagesSent.size());
 	}
