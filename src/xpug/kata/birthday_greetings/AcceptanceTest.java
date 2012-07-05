@@ -12,7 +12,6 @@ import static org.junit.Assert.assertEquals;
 
 public class AcceptanceTest {
 
-	private static final int SMTP_PORT = 25;
 	private List<Message> messagesSent;
 	private BirthdayService service;
 	
