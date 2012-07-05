@@ -16,6 +16,18 @@ public class BirthdayService {
 
     public static final String SUBJECT = "Happy Birthday!";
 
+
+   class Email {
+
+       public final String recipient;
+       public final String body;
+
+       Email(String recipient, String body) {
+           this.recipient = recipient;
+           this.body = body;
+       }
+   }
+
     public void sendGreetings(String fileName, OurDate ourDate, String smtpHost, int smtpPort) throws IOException, ParseException, AddressException, MessagingException {
 		BufferedReader in = new BufferedReader(new FileReader(fileName));
 		String str = "";
@@ -26,7 +38,9 @@ public class BirthdayService {
 			if (employee.isBirthday(ourDate)) {
 				String recipient = employee.getEmail();
 				String body = "Happy Birthday, dear %NAME%!".replace("%NAME%", employee.getFirstName());
-                sendMessage(smtpHost, smtpPort, "sender@here.com", SUBJECT, body, recipient);
+                Email email = new Email(recipient, body);
+
+                sendMessage(smtpHost, smtpPort, "sender@here.com", SUBJECT, email.body, email.recipient);
 			}
 		}
 	}
