@@ -11,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BirthdayService {
 
@@ -29,6 +31,10 @@ public class BirthdayService {
    }
 
     public void sendGreetings(String fileName, OurDate ourDate, String smtpHost, int smtpPort) throws IOException, ParseException, AddressException, MessagingException {
+
+        List<Email> toSend = new ArrayList<Email>();
+
+
 		BufferedReader in = new BufferedReader(new FileReader(fileName));
 		String str = "";
 		str = in.readLine(); // skip header
@@ -38,11 +44,17 @@ public class BirthdayService {
 			if (employee.isBirthday(ourDate)) {
 				String recipient = employee.getEmail();
 				String body = "Happy Birthday, dear %NAME%!".replace("%NAME%", employee.getFirstName());
-                Email email = new Email(recipient, body);
 
-                sendMessage(smtpHost, smtpPort, "sender@here.com", SUBJECT, email.body, email.recipient);
+                Email email = new Email(recipient, body);
+                toSend.add(email);
+
+
 			}
 		}
+
+        for ( Email email : toSend) {
+        sendMessage(smtpHost, smtpPort, "sender@here.com", SUBJECT, email.body, email.recipient);
+        }
 	}
 
 	private void sendMessage(String smtpHost, int smtpPort, String sender, String subject, String body, String recipient) throws AddressException, MessagingException {
