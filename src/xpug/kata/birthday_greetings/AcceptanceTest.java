@@ -20,7 +20,7 @@ public class AcceptanceTest {
 	public void setUp() throws Exception {
 		messagesSent = new ArrayList<Message>();
 
-        MessageSender messageSender = new MessageSender("localhost", "25") {
+        MessageSender messageSender = new EmailMessageSender("localhost", "25") {
             @Override
             protected void sendMessage(Message msg) {
                 messagesSent.add(msg);
