@@ -22,16 +22,7 @@ public class BirthdayService {
     }
 
 
-    class Email {
 
-        public final String recipient;
-        public final String body;
-
-        Email(String recipient, String body) {
-            this.recipient = recipient;
-            this.body = body;
-        }
-    }
 
     public void sendGreetings( OurDate ourDate, String smtpHost, int smtpPort) throws IOException, ParseException, AddressException, MessagingException {
 
@@ -39,6 +30,8 @@ public class BirthdayService {
 
 
         List<Employee> employeesWithBirthdayToday = employeeBook.findEmployeesBornOn(ourDate);
+
+
         for (Employee employee : employeesWithBirthdayToday) {
             String recipient = employee.getEmail();
             String body = "Happy Birthday, dear %NAME%!".replace("%NAME%", employee.getFirstName());
