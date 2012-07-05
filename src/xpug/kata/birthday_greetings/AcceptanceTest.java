@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +20,15 @@ public class AcceptanceTest {
 	public void setUp() throws Exception {
 		messagesSent = new ArrayList<Message>();
 
-		service = new BirthdayService(new FileSystemEmployeeBook("employee_data.txt")) {
-			@Override
-			protected void sendMessage(Message msg) throws MessagingException {
-				messagesSent.add(msg);
-			}
-		};
+        MessageSender messageSender = new MessageSender("localhost", "25") {
+            @Override
+            protected void sendMessage(Message msg) {
+                messagesSent.add(msg);
+            }
+
+        };
+
+		service = new BirthdayService(new FileSystemEmployeeBook("employee_data.txt"), messageSender);
 	}
 	
 	@Test
