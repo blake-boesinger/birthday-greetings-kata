@@ -4,7 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.mail.Message;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -14,12 +17,14 @@ public class AcceptanceTest {
 
     private List<Message> messagesSent;
     private BirthdayService service;
+    private EmployeeBook employeeBook;
+    private MessageSender messageSender;
 
     @Before
     public void setUp() throws Exception {
         messagesSent = new ArrayList<Message>();
 
-        MessageSender messageSender = new EmailMessageSender("localhost", "25") {
+        messageSender = new EmailMessageSender("localhost", "25") {
             @Override
             protected void sendMessage(Message msg) {
                 messagesSent.add(msg);
@@ -27,11 +32,19 @@ public class AcceptanceTest {
 
         };
 
-        service = new BirthdayService(new FileSystemEmployeeBook("employee_data.txt"), messageSender);
+
     }
 
     @Test
     public void baseScenario() throws Exception {
+
+        employeeBook = new EmployeeBook() {
+                    public List<Employee> findEmployeesBornOn(OurDate ourDate) throws IOException, ParseException {
+                        return    Arrays.asList( new Employee("John", null, "2008/10/08", "john.doe@foobar.com"));
+                    }
+                };
+
+                service = new BirthdayService(employeeBook, messageSender);
 
         service.sendGreetings(new OurDate("2008/10/08"));
 
@@ -45,6 +58,14 @@ public class AcceptanceTest {
 
     @Test
     public void willNotSendEmailsWhenNobodysBirthday() throws Exception {
+
+        employeeBook = new EmployeeBook() {
+                           public List<Employee> findEmployeesBornOn(OurDate ourDate) throws IOException, ParseException {
+                               return    Arrays.asList( );
+                           }
+                       };
+
+                       service = new BirthdayService(employeeBook, messageSender);
         service.sendGreetings(new OurDate("2008/01/01"));
 
         assertEquals("what? messages?", 0, messagesSent.size());
