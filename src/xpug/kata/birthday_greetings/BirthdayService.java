@@ -33,6 +33,7 @@ public class BirthdayService {
     public void sendGreetings(String fileName, OurDate ourDate, String smtpHost, int smtpPort) throws IOException, ParseException, AddressException, MessagingException {
 
         List<Email> toSend = new ArrayList<Email>();
+        List<Employee> employeesWithBirthdayToday = new ArrayList<Employee>();
 
 
 		BufferedReader in = new BufferedReader(new FileReader(fileName));
@@ -42,15 +43,22 @@ public class BirthdayService {
 			String[] employeeData = str.split(", ");
 			Employee employee = new Employee(employeeData[1], employeeData[0], employeeData[2], employeeData[3]);
 			if (employee.isBirthday(ourDate)) {
-				String recipient = employee.getEmail();
-				String body = "Happy Birthday, dear %NAME%!".replace("%NAME%", employee.getFirstName());
 
-                Email email = new Email(recipient, body);
-                toSend.add(email);
+                employeesWithBirthdayToday.add(employee);
 
 
 			}
 		}
+
+
+        for (Employee employee : employeesWithBirthdayToday) {
+            String recipient = employee.getEmail();
+            				String body = "Happy Birthday, dear %NAME%!".replace("%NAME%", employee.getFirstName());
+
+                            Email email = new Email(recipient, body);
+                            toSend.add(email);
+
+        }
 
         for ( Email email : toSend) {
         sendMessage(smtpHost, smtpPort, "sender@here.com", SUBJECT, email.body, email.recipient);
